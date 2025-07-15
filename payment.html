@@ -220,7 +220,9 @@
     const stripe = Stripe(config.stripePublicKey);
   
     const elements = stripe.elements();
-    const cardElement = elements.create('card');
+    const cardElement = elements.create('card', {
+      hidePostalCode: true
+    });
     cardElement.mount('#card-element');
   
     const cardErrors = document.getElementById('card-errors');
@@ -231,7 +233,16 @@
     const params = new URLSearchParams(window.location.search);
     const productName = params.get('name') || 'Produto não informado';
     const productPriceText = params.get('price') || 'R$ 0,00';
-    const productPriceNumber = parseFloat(productPriceText.replace(/[^\d.-]/g, ''));
+  
+    function converteBRparaNumero(valorBR) {
+      if (!valorBR) return 0;
+      let v = valorBR.replace(/[^\d,.-]/g, '');
+      v = v.replace(/\./g, '');
+      v = v.replace(',', '.');
+      return parseFloat(v);
+    }
+  
+    const productPriceNumber = converteBRparaNumero(productPriceText);
   
     document.getElementById('product-name').textContent = productName;
     document.getElementById('product-price').textContent = productPriceText;
@@ -303,13 +314,5 @@
     });
   </script>
   
-
-  <script src="https://unpkg.com/imask"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      IMask(document.getElementById('phone'), { mask: '(00) 00000-0000' });
-      IMask(document.getElementById('zipcode'), { mask: '00000-000' });
-    });
-  </script>
 </body>
 </html>
