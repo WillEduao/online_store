@@ -78,14 +78,13 @@
   <script>
     const productsContainer = document.getElementById('products-container');
 
-    function createProductCard(product, index) {
-
+    function createProductCard(product) {
       const price = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(product.price);
       const original_price = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(product.original_price);
 
       const cardHTML = `
         <div class="col-sm-6 col-md-4 col-lg-2">
-          <div class="card shadow-sm h-100" style="cursor: pointer;" onclick="window.location.href='produtos.html?id=${index}'" tabindex="0">
+          <div class="card shadow-sm h-100" style="cursor: pointer;" onclick="window.location.href='produtos.html?id=${product.id}'" tabindex="0">
             <img src="${product.imagem}" class="card-img-top" alt="Imagem do produto ${product.name}">
             <div class="card-body p-3">
               <h5 class="card-title">${product.name}</h5>
@@ -105,16 +104,30 @@
       productsContainer.innerHTML += cardHTML;
     }
 
+    function getQueryParam(param) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(param);
+    }
+
     async function carregarTodosProdutos() {
       try {
         const res = await fetch('http://localhost:3000/api/products');
-        const produtos = await res.json();
+        let produtos = await res.json();
 
-        console.log(produtos)
+        const termoBusca = getQueryParam('search');
 
-        produtos.forEach((produto, index) => {
-          createProductCard(produto, index);
+        if (termoBusca) {
+          const termoLower = termoBusca.toLowerCase();
+
+          produtos = produtos.filter(p => p.name.toLowerCase().includes(termoLower));
+        }
+
+        productsContainer.innerHTML = '';
+
+        produtos.forEach((produto) => {
+          createProductCard(produto);
         });
+
       } catch (err) {
         console.error('Erro ao carregar produtos:', err);
         productsContainer.innerHTML = `<p class="text-danger">Erro ao carregar produtos.</p>`;
