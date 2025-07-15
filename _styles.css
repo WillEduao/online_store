@@ -1,0 +1,48 @@
+/* Cabeçalho */
+header {
+    background-color: #f7f7f7; /* Cor mais suave para o cabeçalho */
+    padding: 1rem 2rem; /* Ajusta o espaçamento do cabeçalho */
+    height: 75px;
+}
+
+header img {
+    width: 220px; /* Logo ajustado para ser um pouco maior */
+    padding: 1%;
+    margin-top: 25px;
+}
+
+header a {
+    color: #084581; /* Cor de texto suave */
+    font-weight: normal;
+    text-transform: uppercase;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+}
+/* Título dos produtos em destaque */
+h2 {
+    color: #e75d1c; /* Cor mais suave para o título */
+    font-size: 1.8rem; /* Tamanho menor do título */
+}
+
+/* Ajuste das caixas de produtos */
+.card {
+    transform: scale(0.7); /* Reduzir um pouco mais as caixas dos produtos */
+}
+
+.form-control {
+    width: 40%; /* Ajusta o campo de busca */
+    margin-right: 10px;
+}
+
+.btn-primary {
+    background-color: #e75d1c;
+    border-color: #e75d1c;
+}
+
+/* Ajuste do layout e links no cabeçalho */
+nav ul li {
+    font-size: 0.9rem; /* Tamanho menor das fontes dos links */
+}
+.row.g-4 {
+    gap: 0rem; /* Reduz o espaçamento entre as caixas */
+}
