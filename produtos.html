@@ -144,12 +144,21 @@
   <script>
     async function carregarProduto() {
       const urlParams = new URLSearchParams(window.location.search);
-      const productId = urlParams.get('id');
+      let productId = urlParams.get('id');
 
       try {
         const res = await fetch('http://localhost:3000/api/products');
         const produtos = await res.json();
-        const produto = produtos[productId];
+
+        let produto;
+
+        if (productId) {
+          produto = produtos.find(p => String(p.id) === productId);
+        }
+
+        if (!produto) {
+          produto = produtos[0];
+        }
 
         if (produto) {
           const price = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(produto.price);
@@ -170,6 +179,8 @@
         document.getElementById('product-name').innerText = 'Erro ao buscar o produto';
       }
     }
+
+
 
     document.getElementById('buyButton').addEventListener('click', function (event) {
       event.preventDefault();
