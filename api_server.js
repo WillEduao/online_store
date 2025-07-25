@@ -2,15 +2,19 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();   
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const path = require('path');
 
 const app = express();
 
 const apiRoutes = require('./routes/api');
 
-console.log('__dirname:', __dirname);
-
 app.use(cors());
 app.use(express.json());
+
+// Serve arquivos estáticos na raiz do projeto
+app.use(express.static(__dirname));
+
+// Rotas da API
 app.use('/api', apiRoutes);
 
 app.get('/api/env-config', (req, res) => {
@@ -45,7 +49,9 @@ app.post('/api/pagamento', async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
+const HOST = '0.0.0.0';
+const PORT = 3000;
+
+app.listen(PORT, HOST, () => {
+  console.log(`Servidor rodando em http://${HOST}:${PORT}`);
 });

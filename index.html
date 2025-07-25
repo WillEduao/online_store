@@ -21,9 +21,10 @@
       font-family: 'Poppins', sans-serif;
     }
     header {
-      background: #fff;
+      background: #f0f0f5;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       padding: 1rem 0;
+      border-bottom: 2px solid #f0f0f5;
     }
     nav a {
       color: #212529;
@@ -45,19 +46,19 @@
     .card:hover,
     .card:focus-within {
       transform: translateY(-5px);
-      box-shadow: 0 8px 20px rgba(13, 110, 253, 0.3);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       outline: none;
     }
   </style>
 </head>
 
 <body>
-  <header class="bg-white py-3 shadow-sm">
+  <header class="bg-white py-3 shadow-sm" style="border-bottom: 1px solid #e5e5e5;">
     <div class="container d-flex justify-content-between align-items-center">
       <div class="d-flex align-items-center gap-3">
-        <img src= "img/logoclickmachado.jpg" alt="Logo da Loja" style="height: 60px;" />
+        <img src= "img/e-commerce-icon-4.jpg" alt="Logo da Loja" style="height: 60px;" />
         <span class="fs-4 fw-bold" style="font-family: 'League Gothic', sans-serif; letter-spacing: 15px;">
-          ClickMachado
+          Click-Machado
         </span>
       </div>
       <nav>
@@ -73,7 +74,7 @@
   <div class="container mt-5"></div>
     <div style="text-align: center; margin-bottom: 20px;">
       <input type="text" id="searchInput" placeholder="Buscar produto..." style="padding: 8px; width: 300px; border-radius: 6px; border: 1px solid #ccc;" />
-      <button onclick="buscarProduto()" style="padding: 8px 12px; border: none; border-radius: 6px; background-color: #0d6efd ; color: white;">Buscar</button>
+      <button onclick="buscarProduto()" style="padding: 8px 12px; border: none; border-radius: 6px; background-color: #df623c ; color: white;">Buscar</button>
     </div>
   </div>
   
@@ -88,7 +89,7 @@
   <script>
     const productsContainer = document.getElementById('products-container');
 
-    function createProductCard(product, index) {
+    function createProductCard(product) {
       const preco = Number(product.price).toLocaleString('pt-BR', {
         style: 'currency',
         currency: 'BRL'
@@ -101,7 +102,7 @@
 
       const cardHTML = `
         <div class="col-sm-6 col-md-4 col-lg-2">
-          <div class="card shadow-sm h-100" style="cursor: pointer;" onclick="window.location.href='produtos.html?id=${index}'" tabindex="0">
+          <div class="card shadow-sm h-100" style="cursor: pointer;" onclick="window.location.href='produtos.html?id=${product.id}'" tabindex="0">
             <img src="${product.imagem}" class="card-img-top" alt="Imagem do produto ${product.name}">
             <div class="card-body p-3">
               <h5 class="card-title">${product.name}</h5>
@@ -124,10 +125,10 @@
     async function carregarProdutos() {
       try {
         const res = await fetch('http://localhost:3000/api/products');
-        const produtos = await res.json(); 
+        const produtos = await res.json();         
         
-        produtos.slice(0, 6).forEach((produto, index) => {
-          createProductCard(produto, index);
+        produtos.slice(0, 6).forEach((produto) => {
+          createProductCard(produto);
         });
       } catch (err) {
         console.error('Erro ao carregar produtos:', err);
@@ -147,4 +148,10 @@
     carregarProdutos();
   </script>
 </body>
+
+<footer style="text-align: center; padding: 20px 10px; background-color: #f8f9fa; color: #6c757d; font-size: 14px; margin-top: 40px;">
+  © 2025 <strong>ClickMachado</strong> — Todos os direitos reservados | 
+  <a href="politicaprivacidade.html" style="color: #007bff; text-decoration: none;">Política de Privacidade</a>
+</footer>
+
 </html>
