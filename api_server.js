@@ -11,10 +11,8 @@ const apiRoutes = require('./routes/api');
 app.use(cors());
 app.use(express.json());
 
-// Serve arquivos estáticos na raiz do projeto
 app.use(express.static(__dirname));
 
-// Rotas da API
 app.use('/api', apiRoutes);
 
 app.get('/api/env-config', (req, res) => {
