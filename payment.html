@@ -4,116 +4,31 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Detalhes do Produto</title>
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-  />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
   <script src="https://js.stripe.com/v3/"></script>
   <style>
-    body {
-      background-color: #6c99b9;
-      font-family: Arial, sans-serif;
-    }
-    .container {
-      max-width: 800px;
-      margin-top: 30px;
-    }
-    .button-container {
-      display: flex;
-      gap: 20px;
-      margin-top: 10px;
-    }
+    body { background-color: #6c99b9; font-family: Arial, sans-serif; }
+    .container { max-width: 800px; margin-top: 30px; }
+    .button-container { display: flex; gap: 20px; margin-top: 10px; }
     .btn-back {
-      padding: 12px 24px;
-      border: none;
-      border-radius: 10px;
-      font-size: 1rem;
-      cursor: pointer;
-      width: auto;
-      text-align: center;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      background-color: #e45c0d;
-      color: white;
-      text-decoration: none;
+      padding: 12px 24px; border: none; border-radius: 10px; font-size: 1rem; cursor: pointer; width: auto;
+      text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); background-color: #e45c0d; color: white; text-decoration: none;
     }
-    .btn-back:hover {
-      background-color: #cc4a00;
-    }
-    .bank-details {
-      background-color: #f8f9fa;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
-    }
-    .form-control {
-      margin-bottom: 15px;
-    }
-    .bank-details h3 {
-      margin-bottom: 20px;
-      color: #333;
-    }
-    .btn-primary {
-      width: auto;
-      padding: 8px 16px;
-      font-size: 0.9rem;
-      background-color: #007bff;
-      border: none;
-      color: white;
-      border-radius: 8px;
-    }
-    .btn-primary:hover {
-      background-color: #0056b3;
-    }
-    .form-row {
-      display: flex;
-      gap: 15px;
-      justify-content: space-between;
-      flex-wrap: wrap;
-    }
-    .form-row .col {
-      flex: 1;
-    }
-    .form-row .col label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
-    }
-    .form-row .col input {
-      width: 100%;
-      padding: 6px;
-      font-size: 1rem;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-    #message {
-      margin-top: 20px;
-      font-weight: bold;
-      padding: 10px;
-      border-radius: 6px;
-      min-height: 24px;
-    }
-    #message.success {
-      color: green;
-      background-color: #e6ffe6;
-    }
-    #message.error {
-      color: red;
-      background-color: #ffe6e6;
-    }
-    /* Estilo Stripe Elements */
-    #card-element {
-      padding: 10px 12px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      background-color: white;
-      margin-bottom: 15px;
-    }
-    #card-errors {
-      color: red;
-      margin-top: -10px;
-      margin-bottom: 15px;
-      min-height: 20px;
-    }
+    .btn-back:hover { background-color: #cc4a00; }
+    .bank-details { background-color: #f8f9fa; padding: 20px; border-radius: 10px; box-shadow: 0 1px 8px rgba(0,0,0,0.1); }
+    .form-control { margin-bottom: 15px; }
+    .bank-details h3 { margin-bottom: 20px; color: #333; }
+    .btn-primary { width: auto; padding: 8px 16px; font-size: 0.9rem; background-color: #007bff; border: none; color: white; border-radius: 8px; }
+    .btn-primary:hover { background-color: #0056b3; }
+    .form-row { display: flex; gap: 15px; justify-content: space-between; flex-wrap: wrap; }
+    .form-row .col { flex: 1; }
+    .form-row .col label { display: block; margin-bottom: 5px; font-weight: bold; }
+    .form-row .col input { width: 100%; padding: 6px; font-size: 1rem; border-radius: 5px; border: 1px solid #ccc; }
+    #message { margin-top: 20px; font-weight: bold; padding: 10px; border-radius: 6px; min-height: 24px; }
+    #message.success { color: green; background-color: #e6ffe6; }
+    #message.error { color: red; background-color: #ffe6e6; }
+    #card-element { padding: 10px 12px; border: 1px solid #ccc; border-radius: 5px; background-color: white; margin-bottom: 15px; }
+    #card-errors { color: red; margin-top: -10px; margin-bottom: 15px; min-height: 20px; }
   </style>
 </head>
 
@@ -212,65 +127,73 @@
 
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-  
+    import { getSummary, clearCart } from './cart.js';
+
     const configRes = await fetch('http://localhost:3000/api/env-config');
     const config = await configRes.json();
-  
+
     const supabaseClient = createClient(config.supabaseUrl, config.supabaseAnonKey);
     const stripe = Stripe(config.stripePublicKey);
-  
+
     const elements = stripe.elements();
-    const cardElement = elements.create('card', {
-      hidePostalCode: true
-    });
+    const cardElement = elements.create('card', { hidePostalCode: true });
     cardElement.mount('#card-element');
-  
+
     const cardErrors = document.getElementById('card-errors');
     cardElement.on('change', (event) => {
       cardErrors.textContent = event.error ? event.error.message : '';
     });
-  
+
     const params = new URLSearchParams(window.location.search);
-    const productName = params.get('name') || 'Produto não informado';
-    const productPriceText = params.get('price') || 'R$ 0,00';
-  
-    function converteBRparaNumero(valorBR) {
+    const urlName = params.get('name') || 'Produto não informado';
+    const urlPriceText = params.get('price') || 'R$ 0,00';
+
+    const brl = (n) => Number(n||0).toLocaleString('pt-BR', { style:'currency', currency:'BRL' });
+    const brToNumber = (valorBR) => {
       if (!valorBR) return 0;
-      let v = valorBR.replace(/[^\d,.-]/g, '');
-      v = v.replace(/\./g, '');
-      v = v.replace(',', '.');
+      let v = valorBR.replace(/[^\d,.-]/g, '').replace(/\./g, '').replace(',', '.');
       return parseFloat(v);
-    }
-  
-    const productPriceNumber = converteBRparaNumero(productPriceText);
-  
-    document.getElementById('product-name').textContent = productName;
-    document.getElementById('product-price').textContent = productPriceText;
-  
+    };
+
+    const { cart, total } = getSummary();
+
+    const namesForDB = cart.length
+      ? `{${cart.map(p => p.name + (Number(p.qty) > 1 ? ` x${p.qty}` : '')).join(', ')}}`
+      : urlName;
+
+    const namesForUI = cart.length
+      ? cart.map(p => p.name + (Number(p.qty) > 1 ? ` x${p.qty}` : '')).join(', ')
+      : urlName;
+
+    const priceNumber = cart.length ? total : brToNumber(urlPriceText);
+    const priceText   = brl(priceNumber);
+
+    document.getElementById('product-name').textContent  = namesForUI;
+    document.getElementById('product-price').textContent = priceText;
+
     const form = document.getElementById('bankDetailsForm');
     const messageDiv = document.getElementById('message');
-  
+
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
-  
+
       messageDiv.textContent = '';
       messageDiv.className = '';
-  
+
       const cardName = document.getElementById('card-name').value.trim();
       if (!cardName) {
         messageDiv.textContent = 'Informe o nome no cartão.';
         messageDiv.className = 'error';
         return;
       }
-  
+
       const { token, error } = await stripe.createToken(cardElement, { name: cardName });
-  
       if (error) {
         messageDiv.textContent = error.message;
         messageDiv.className = 'error';
         return;
       }
-  
+
       const payload = {
         card_name: cardName,
         stripe_token: token.id,
@@ -283,36 +206,35 @@
         state: form.querySelector('#state').value.trim(),
         zipcode: form.querySelector('#zipcode').value.trim(),
         complement: form.querySelector('#complement').value.trim(),
-        product_name: productName,
-        product_price: productPriceNumber,
+
+        product_name: namesForDB,
+        product_price: priceNumber
       };
-  
+
       try {
-        const { data, error: supabaseError } = await supabaseClient
+        const { error: supabaseError } = await supabaseClient
           .from('orders')
           .insert([payload]);
-  
+
         if (supabaseError) {
           messageDiv.textContent = 'Erro ao salvar a compra: ' + supabaseError.message;
           messageDiv.className = 'error';
           return;
         }
-  
+
+        clearCart();
+
         messageDiv.textContent = 'Compra finalizada e salva com sucesso!';
         messageDiv.className = 'success';
         form.reset();
         cardElement.clear();
-  
       } catch (err) {
         messageDiv.textContent = 'Erro inesperado: ' + err.message;
         messageDiv.className = 'error';
       }
-  
+
       messageDiv.scrollIntoView({ behavior: 'smooth' });
-  
-      console.log('Payload enviado:', JSON.stringify(payload, null, 2));
     });
   </script>
-  
 </body>
 </html>
